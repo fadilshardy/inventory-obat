@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Redirect;
 use App\GudangObat;
 use App\HistoriGudang;
 use App\Masterobat;
+use App\PelayananDetail;
+use App\Apotek;
 use Carbon\Carbon;
 use DataTables;
 
@@ -63,25 +65,20 @@ class KartuStokController extends Controller
     }
 
 
-    public function show($id)
-    {
-        //
-        $data = Barang::with(['user_modify'])->where('id', $id)->get();
-        if ($data->count() > 0) {
-            return view('backend.barang.view', ['data' => $data]);
-        }
-    }
 
     public function histori_gudang_keluar($id)
     {
         $first = date("Y-m-d", strtotime("first day of this month"));
         $last = date("Y-m-d", strtotime("last day of this month"));
         $dataobat = Masterobat::find($id);
-        $data = HistoriGudang::with(['gudang_obat'])
-            ->whereBetween('created_at', [new Carbon($first), new Carbon($last)])
+        $data = Apotek::
+        whereBetween('created_at', [new Carbon($first), new Carbon($last)])
             ->where('id_obat', $id)
-            ->orderBy('id', 'DESC')
             ->get();
+
+            
+
+    
         return view('kartustok.histori_keluar_gudang',  ['data' => $data],  ['dataobat' => $dataobat]);
     }
     public function histori_gudang_masuk($id)

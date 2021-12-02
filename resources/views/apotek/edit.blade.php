@@ -3,7 +3,7 @@
 @section('title', 'Edit data gudang obat')
 
 @section('content_header')
-<h1>Edit product {{$gudangobat->nama_obat}}</h1>
+<h1>Edit product {{$data->nama_obat}}</h1>
 @stop
 
 @section('content')
@@ -12,10 +12,10 @@
   <div class="col-sm-12">
     <div class="box box-danger">
       <div class="box-header with-border">
-        <h3 class="box-title">Edit Obat {{$gudangobat->nama_obat}}</h3>
+        <h3 class="box-title">Edit Obat {{$data->nama_obat}}</h3>
       </div>
       <div class="box-body">
-        {!! Form::open(['action' => ['GudangObatController@update', $gudangobat->id], 'method' => 'post']) !!}
+        {!! Form::open(['action' => ['GudangObatController@update', $data->id], 'method' => 'post']) !!}
 
 
         <div class="row">
@@ -40,7 +40,7 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       {{Form::label('dosis', 'dosis')}}
-                      {{ Form::text('dosis', $gudangobat->dosis, ['class' => 'form-control', 'placeholder' => 'dosis']) }}
+                      {{ Form::text('dosis', $data->dosis, ['class' => 'form-control', 'placeholder' => 'dosis']) }}
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -48,7 +48,7 @@
 
                       {{Form::label('expiry_date', 'Expiry date')}}
                       <div class="input-group date" id="myDatepicker">
-                        <input type='text' class="form-control" / name="expiry_date" value="<?= $gudangobat->expiry_date; ?>">
+                        <input type='text' class="form-control" / name="expiry_date" value="<?= $data->expiry_date; ?>">
                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -61,7 +61,7 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       {{Form::label('no_batch', 'No.batch')}}
-                      {{ Form::text('no_batch', $gudangobat->no_batch, ['class' => 'form-control', 'placeholder' => 'Isi no batch obat']) }}
+                      {{ Form::text('no_batch', $data->no_batch, ['class' => 'form-control', 'placeholder' => 'Isi no batch obat']) }}
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -93,13 +93,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       {{Form::label('jumlah', 'Jumlah')}}
-                      {{Form::number('jumlah', $gudangobat->jumlah, ['step' => '0.01', 'class' => 'form-control', 'placeholder' => 'jumlah'])}}
+                      {{Form::number('jumlah', $data->jumlah, ['step' => '0.01', 'class' => 'form-control', 'placeholder' => 'jumlah'])}}
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       {{Form::label('harga_satuan', 'Harga satuan obat')}}
-                      {{Form::number('harga_satuan', $gudangobat->harga_satuan, ['step' => '0.01', 'class' => 'form-control', 'placeholder' => 'Harga satuan'])}}
+                      {{Form::number('harga_satuan', $data->harga_satuan, ['step' => '0.01', 'class' => 'form-control', 'placeholder' => 'Harga satuan'])}}
                     </div>
                   </div>
                 </div>
@@ -108,7 +108,7 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       {{Form::label('keterangan', 'keterangan')}}
-                      {{Form::textarea('keterangan', $gudangobat->keterangan, ['class' => 'form-control', 'placeholder' => 'Keterangan obat'])}}
+                      {{Form::textarea('keterangan', $data->keterangan, ['class' => 'form-control', 'placeholder' => 'Keterangan obat'])}}
                     </div>
                   </div>
                 </div>

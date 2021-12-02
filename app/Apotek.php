@@ -9,8 +9,13 @@ class Apotek extends Model
     protected $table = 'Apotek';
     public $timestamps = true;
 
-    public function user_modify()
+    public function MasterObat()
     {
-        return $this->belongsTo('App\User', 'user_modified');
+        return $this->belongsTo('App\MasterObat', 'id_obat');
+    }
+
+    public function GudangObat()
+    {
+        return $this->belongsTo('App\GudangObat', 'id_gudang');
     }
 }

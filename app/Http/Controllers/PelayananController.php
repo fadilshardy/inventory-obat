@@ -27,20 +27,29 @@ class PelayananController extends Controller
      */
     public function index()
     {
-        $apotek = Apotek::all();
 
-        $pelayanan = Pelayanan::all();
-        $data = Pelayanan::all();
+        // $pelayanan = Pelayanan::all();
+        $pelayanan = Pelayanan::orderBy('created_at', 'DESC')->get();
 
 
         // Return the index view
-        return view('pelayanan.index')->with('apotek', $apotek)->with('pelayanan', $pelayanan);
+        return view('pelayanan.index')->with('pelayanan', $pelayanan);
     }
     public function search_obat(Request $request)
     {
         if ($request->has('q')) {
             $cari = $request->q;
-            $data = DB::table('apotek')->where('nama_obat', 'LIKE', '%' . $cari . '%')->get();
+            // $data = DB::table('apotek')->where('nama_obat', 'LIKE', '%' . $cari . '%')->get();
+
+            $data = DB::table('apotek')
+                // ->select('apotek.active', 'active as pantek')
+
+                ->join('master_obat', 'apotek.id_obat', '=', 'master_obat.id')
+                ->join('gudang_obat', 'apotek.id_gudang', '=', 'gudang_obat.id')
+                ->where('nama_obat', 'LIKE', '%' . $cari . '%')
+                ->select('apotek.id as id_apotek', 'apotek.*', 'gudang_obat.*', 'master_obat.*')
+                ->where('apotek.active', '!=', 0)
+                ->get();
             return response()->json($data);
         }
     }
@@ -77,13 +86,9 @@ class PelayananController extends Controller
         $data = new Pelayanan();
 
         $data->tanggal = date('Y-m-d', strtotime($request->tanggal));
-        $data->nama_pasien = $request->nama_pasien;
         $data->id_pasien = $request->id_pasien;
+        $data->keterangan = $request->keterangan;
 
-
-        $data->active = 1;
-        $data->user_modified = Session::get('userinfo')['user_id'];
-        $total = 0;
         if ($data->save()) {
             $id_pelayanan = $data->id;
             if (isset($_POST['id_apotek_obat'])) {
@@ -94,22 +99,24 @@ class PelayananController extends Controller
                     $detail->id_apotek = $id_apotek_obat;
                     $detail->qty = $_POST['qty'][$key];
                     $detail->harga_jual = $_POST['harga'][$key];
-                    $total = $total + ($detail->qty * $detail->harga);
                     $detail->save();
                 endforeach;
             }
 
             $data = Pelayanan::find($id_pelayanan);
-            $data->total = $total;
             $data->save();
 
             $data = PelayananDetail::where('id_pelayanan', '=', $id_pelayanan)->orderBy('id', 'ASC')->get();
             foreach ($data as $data) :
                 $detail = Apotek::find($data->id_apotek);
-                $detail->jumlah = $detail->jumlah - $data->qty;
+                $detail->jumlah_apotek = $detail->jumlah_apotek - $data->qty;
+                if ($detail->jumlah_apotek == 0) {
+                    $detail->active = 0;
+                }
                 $detail->save();
             endforeach;
 
+       
             return Redirect::to('/pelayanan')->with('success', "Data telah tersimpan!")->with('mode', 'success');
         }
     }
@@ -122,6 +129,8 @@ class PelayananController extends Controller
         $pelayanan_detail = DB::table('pelayanan_detail')
             ->where('id_pelayanan', $id_pelayanan)
             ->join('apotek', 'pelayanan_detail.id_apotek', '=', 'apotek.id')
+            ->join('master_obat', 'pelayanan_detail.id_obat', '=', 'master_obat.id')
+
             ->get();
         $total = DB::table('pelayanan_detail')
             ->where('id_pelayanan', $id_pelayanan)
@@ -138,69 +147,7 @@ class PelayananController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        //
-        $data = Apoteker::find($id);
-        $data->active = 0;
-        $userinfo = Session::get('userinfo');
-        $data->user_modified = Session::get('userinfo')['user_id'];
-        if ($data->save()) {
-
-            $data = Apoteker::find($id);
-            $data = Stok::where('keterangan', '=', $data->no_nota)->orderBy('id', 'ASC')->get();
-            foreach ($data as $data) :
-                $detail = GudangObat::find($data->id_obat);
-                $detail->jumlah = $detail->jumlah - $data->jumlah;
-                $detail->save();
-            endforeach;
-
-            $data = Apoteker::find($id);
-            $res = StokApoteker::where('keterangan', '=', $data->no_nota)->delete();
-
-            Session::flash('success', 'Data deleted successfully');
-            Session::flash('mode', 'success');
-            return new JsonResponse(["status" => true]);
-        } else {
-            return new JsonResponse(["status" => false]);
-        }
-
-        return new JsonResponse(["status" => false]);
-    }
-
-
-
-    public function popup_media_obat($id_count = null)
-    {
-        $apotek = Apotek::all();
-
-        return view('pelayanan.view_apotekobat')->with('id_count', $id_count)->with('apotek', $apotek);
-    }
-
-    public function popup_media_pasien($id_count = null)
-    {
-        $datapasien = DataPasien::all();
-
-        return view('pelayanan.view_datapasien')->with('id_count', $id_count)->with('datapasien', $datapasien);
-    }
-
-
-
-    public function testgan($id_count = null, Request $request)
-    {
-        if ($request->ajax()) {
-            $data = GudangObat::latest()->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-
-                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
-
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-
-
-        return view('pelayanan.view_test')->with('id_count', $id_count);
+        Pelayanan::destroy($id);
+        return redirect('/pelayanan')->with('success', 'Data berhasil dihapus!');
     }
 }

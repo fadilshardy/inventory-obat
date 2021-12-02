@@ -17,13 +17,15 @@ class CreateLaporanStokTable extends Migration
             $table->bigIncrements('id');
             $table->string('nama_obat');
             $table->string('dosis');
-            $table->string('bentuk_sediaan');
-            $table->integer('stok_gudang')->nullable();
-            $table->integer('stok_apotek')->nullable();
-            $table->integer('stok_masuk_gudang')->nullable();
-            $table->integer('stok_masuk_apotek')->nullable();
-            $table->integer('stok_keluar_gudang')->nullable();
-            $table->integer('stok_keluar_apotek')->nullable();
+            $table->integer('harga_satuan');
+            $table->integer('stok_gudang');
+            $table->integer('stok_loker');
+            $table->integer('jumlah');
+            $table->integer('harga');
+            $table->integer('safety_stock');
+            $table->integer('reorder_point');
+            $table->string('status');
+
             $table->timestamps();
         });
     }

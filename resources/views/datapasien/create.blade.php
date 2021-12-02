@@ -26,27 +26,19 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              {{Form::label('nik', 'NIK')}}
-              {{ Form::number('nik', '', ['class' => 'form-control', 'placeholder' => 'NIK pasien']) }}
-            </div>
-          </div>
-        </div>
 
 
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
               {{Form::label('gender', 'Jenis kelamin')}}
-              {{Form::select('gender', ['laki-laki' => 'Laki-Laki', 'perempuan' => 'Perempuan'], null, ['id' => 'select2', 'class' => 'form-control select2', 'placeholder' => '-- Pilih --'])}}
+              {{Form::select('gender', ['laki-laki' => 'Laki-Laki', 'perempuan' => 'Perempuan'], null, ['id' => 'select2', 'class' => 'form-control select2', 'placeholder' => '-'])}}
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
 
-              {{Form::label('tanggal_lahir', 'Tanggal lahir')}}
+              {{Form::label('tanggal_lahir', 'Tanggal lahir (tanggal/bulan/tahun)')}}
               <div class="input-group date" id="myDatepicker">
                 <input type='text' class="form-control" / name="tanggal_lahir">
                 <span class="input-group-addon">
@@ -61,13 +53,13 @@
           <div class="col-sm-6">
             <div class="form-group">
               {{Form::label('alamat', 'Alamat')}}
-              {{ Form::text('alamat', '', ['class' => 'form-control', 'placeholder' => 'Alamat pasien']) }}
+              {{ Form::text('alamat', '', ['class' => 'form-control', 'placeholder' => 'Isi alamat']) }}
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              {{Form::label('no_telp', 'Nomor telepon')}}
-              {{Form::number('no_telp', '', ['step' => '1', 'class' => 'form-control', 'placeholder' => 'Nomor telepon pasien'])}}
+              {{Form::label('no_telp', 'Nomor telepon (+62)')}}
+              {{Form::number('no_telp', '', ['step' => '1', 'class' => 'form-control', 'placeholder' => 'Isi nomor'])}}
             </div>
           </div>
         </div>

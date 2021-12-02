@@ -28,7 +28,7 @@
             <div class="form-group">
               {{Form::label('nama_obat', 'Cari obat')}}
               <select id="search_gudangobat" style="width: 100%" placeholder="cari obat..">
-              </select> {{ Form::hidden('id_gudang', '', ['class' => 'form-control', 'id' => 'id_gudang' , 'placeholder' => 'id_obat', 'readonly' => 'true']) }}
+              </select> {{ Form::hidden('id_gudang', '', ['class' => 'form-control', 'id' => 'id_gudang' , 'placeholder' => 'id_gudang', 'readonly' => 'true']) }}
               {{ Form::hidden('id_obat', '', ['class' => 'form-control', 'id' => 'id_obat' , 'placeholder' => 'id_obat', 'readonly' => 'true']) }}
 
             </div>
@@ -131,7 +131,7 @@
   @section('js')
   <script>
     $("#search_gudangobat").select2({
-      multiple: true,
+      multiple: false,
       placeholder: "Cari obat..",
       minimumInputLength: 1,
       language: {
@@ -184,13 +184,16 @@
     }
 
     function formatRepoSelection(obat) {
+      if (!obat.id) {
+        return obat.text;
+      }
       let results = $(
         '<span>' + obat.nama_obat + '</span>' + ' ' + '<span>' + obat.dosis + ' ' + obat.bentuk_sediaan + '</span>'
       );
       return results;
     };
     $('#search_gudangobat').on("select2:select", function(e) {
-      $("#id_gudang").val(e.params.data.id)
+      $("#id_gudang").val(e.params.data.id_gudang)
       $("#id_obat").val(e.params.data.id_obat)
       $("#nama_obat").val(e.params.data.nama_obat)
       $("#dosis").val(e.params.data.dosis)
@@ -200,7 +203,6 @@
       $("#supplier").val(e.params.data.supplier)
       $("#harga_satuan").val(e.params.data.harga_satuan)
       $("#stokobat").text(e.params.data.jumlah)
-      $('#search_gudangobat').val('2');
     });
   </script>
   @endsection

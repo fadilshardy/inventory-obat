@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\KategoriObat;
-use App\Supplier;
-use App\BentukSediaan;
 use App\MasterObat;
 use App\GudangObat;
 use Illuminate\Http\Request;
 use DB;
+use Carbon\Carbon;
 
 
 class GudangObatController extends Controller
@@ -36,10 +34,10 @@ class GudangObatController extends Controller
     public function index()
     {
         // Get all the stok in gudang obat
-        $gudangobat = GudangObat::all();
+        $data = GudangObat::with('MasterObat')->get();
 
         // Return the index view
-        return view('gudangobat.index')->with('gudangobat', $gudangobat);
+        return view('gudangobat.index')->with('data', $data);
     }
 
     /**
@@ -49,15 +47,8 @@ class GudangObatController extends Controller
      */
     public function create()
     {
-        // Get kategori obat, supplier, and bentuksediaan
-        $kategoriobat = KategoriObat::all();
-
-        $supplier = Supplier::all();
-        $bentuksediaan = BentukSediaan::all();
-
-
         // Return the create view
-        return view('gudangobat.create')->with('kategoriobat', $kategoriobat)->with('supplier', $supplier)->with('bentuksediaan', $bentuksediaan);
+        return view('gudangobat.create');
     }
 
     public function search_masterobat(Request $request)
@@ -74,12 +65,8 @@ class GudangObatController extends Controller
         // Validate user input
         $this->validate($request, [
             'id_obat' => 'required',
-            'nama_obat' => 'required|min:3|max:150',
             'no_batch' => 'required|min:3|max:150',
-            'dosis' => 'required|min:3|max:50',
-            'bentuk_sediaan' => 'required|min:3|max:150',
             'supplier' => 'required|min:3|max:150',
-            'harga_satuan' => 'required|numeric',
             'jumlah' => 'required|numeric',
             'expiry_date' => 'required|min:3|max:150',
         ]);
@@ -87,18 +74,13 @@ class GudangObatController extends Controller
         // Create new instance of the model
         $gudangobat = new GudangObat;
 
-        $gudangobat->nama_obat = $request->input('nama_obat');
         $gudangobat->id_obat = $request->input('id_obat');
         $gudangobat->no_batch = $request->input('no_batch');
         $gudangobat->keterangan = $request->input('keterangan');
-        $gudangobat->dosis = $request->input('dosis');
-        $gudangobat->bentuk_sediaan = $request->input('bentuk_sediaan');
         $gudangobat->supplier = $request->input('supplier');
-        $gudangobat->harga_satuan = $request->input('harga_satuan');
         $gudangobat->jumlah = $request->input('jumlah');
         $gudangobat->expiry_date = ($request->expiry_date);
         $gudangobat->stok_awal = $request->input('jumlah');
-        $gudangobat->instock = 1;
         $gudangobat->active  = 1;
 
 
@@ -118,7 +100,15 @@ class GudangObatController extends Controller
     public function show($gudangobat_id)
     {
         // get kategori obat
+
         $gudangobat = GudangObat::find($gudangobat_id);
+
+        // $pelayanan_detail = DB::table('gudang_obat')
+        //     ->where('id', $gudangobat_id)
+        //     ->join('master_obat', 'gudang_obat.id_obat', '=', 'master_obat.id')
+        //     ->get();
+
+        // return view
 
         // return view
         return view('gudangobat.show')->with('gudangobat', $gudangobat);
@@ -164,7 +154,6 @@ class GudangObatController extends Controller
             'dosis' => 'required|min:3|max:50',
             'bentuk_sediaan' => 'required|min:3|max:150',
             'supplier' => 'required|min:3|max:150',
-            'harga_satuan' => 'required|numeric',
             'jumlah' => 'required|numeric',
             'expiry_date' => 'required|min:3|max:150',
             'instock' => 'required|numeric|between:0,1',
@@ -176,7 +165,6 @@ class GudangObatController extends Controller
         $gudangobat->dosis = $request->input('dosis');
         $gudangobat->bentuk_sediaan = $request->input('bentuk_sediaan');
         $gudangobat->supplier = $request->input('supplier');
-        $gudangobat->harga_satuan = $request->input('harga_satuan');
         $gudangobat->jumlah = $request->input('jumlah');
         $gudangobat->expiry_date = date("d-m-Y", strtotime($request->input('expiry_date')));
 
@@ -195,9 +183,10 @@ class GudangObatController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GudangObat $gudangobat)
+    public function destroy($id)
     {
-        //
+        GudangObat::destroy($id);
+        return redirect('/gudangobat')->with('success', 'Data berhasil dihapus!');
     }
 
     public function popup_media_obat($id_count = null)

@@ -3,7 +3,6 @@
 @section('title', 'Laporan stok obat gudang')
 
 @section('content_header')
-<h1>Laporan gudang obat</h1>
 @stop
 
 @section('content')
@@ -15,32 +14,7 @@
                 <h3 class="box-title">Laporan stok gudang obat</h3>
             </div>
             <div class="box-body">
-                <form id="form-work" class="form-horizontal" role="form" autocomplete="off" method="GET">
-                    {!! csrf_field() !!}
-                    <div class="row">
-                        <div class="col-md-9 col-md-offset-3">
-                            <div class="col-xs-12 col-sm-3 date">
-                                <div class='input-group date' id='myDatepicker'>
-                                    <input type='text' class="form-control" name="startDate" value=<?= $startDate; ?> />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-3 date">
-                                <div class='input-group date' id='myDatepicker2'>
-                                    <input type='text' class="form-control" name="endDate" value=<?= $endDate; ?> />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-3">
-                                <button type="submit" class="btn bg-purple btn-block">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+           
 
                 <br />
                 <table class="table table-bordered " id="datatable">
@@ -66,9 +40,9 @@
                         @php
                         $i++;
                         $total = $data->stokgudang + $data->stokapotek;
-                        $harga_awal = $data->harga_satuan * $data->stok_awal;
-                        $harga_keluar = $data->harga_satuan * $data->keluargudang;
-                        $harga_akhir = $data->harga_satuan * $data->jumlah;
+                        $harga_awal = $data->MasterObat->harga_satuan * $data->stok_awal;
+                        $harga_keluar = $data->MasterObat->harga_satuan * $data->keluargudang;
+                        $harga_akhir = $data->MasterObat->harga_satuan * $data->jumlah;
 
 
                         $harga_awal_rupiah = number_format($harga_awal,0,',',',');
@@ -78,9 +52,9 @@
                         @endphp
                         <tr>
                             <td>{{$i}}</td>
-                            <td><a href="/gudangobat/{{$data->id}}">{{$data->nama_obat}}</a> ({{$data->dosis}})</td>
+                            <td><a href="/gudangobat/{{$data->id}}">{{$data->MasterObat->nama_obat}}</a> ({{$data->MasterObat->dosis}})</td>
                             <td>{{$data->no_batch}}</td>
-                            <td>{{$data->harga_satuan}}</td>
+                            <td>{{$data->MasterObat->harga_satuan}}</td>
                             <td>{{$data->stok_awal}}</td>
                             <td>Rp. {{$harga_awal_rupiah}}</td>
                             <td>{{$data->keluargudang}}</td>

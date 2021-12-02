@@ -15,13 +15,10 @@ class CreatePelayananTable extends Migration
     {
         Schema::create('pelayanan', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->integer('id_pasien');
             $table->string('tanggal');
-            $table->string('nama_pasien');
-            $table->string('total');
-            $table->string('active');
-            $table->string('user_modified');
             $table->string('keterangan');
+            $table->timestamps();
         });
     }
 

@@ -35,9 +35,9 @@
 					<tbody>
 						@foreach ($apotek as $apotek)
 						@php
-						$formattedexpiry_date = date("d-m-Y", strtotime($apotek->expiry_date));
-						$date = Carbon\Carbon::parse($apotek->expiry_date);
-						$kurang = Carbon\Carbon::parse($apotek->expiry_date)->subYear();
+						$formattedexpiry_date = date("d-m-Y", strtotime($apotek->GudangObat->expiry_date));
+						$date = Carbon\Carbon::parse($apotek->GudangObat->expiry_date);
+						$kurang = Carbon\Carbon::parse($apotek->GudangObat->expiry_date)->subYear();
 						$now = Carbon\Carbon::now();
 
 
@@ -60,19 +60,19 @@
 
 						<tr>
 							<td>{{$apotek->id}}</td>
-							<td><a href="/gudangobat/{{$apotek->id_obat}}">{{$apotek->nama_obat}}</a></td>
-							<td>{{$apotek->no_batch}}</td>
-							<td>{{$apotek->dosis}}</td>
+							<td><a href="/apotek/{{$apotek->id}}">{{$apotek->MasterObat->nama_obat}}</a></td>
+							<td>{{$apotek->GudangObat->no_batch}}</td>
+							<td>{{$apotek->MasterObat->dosis}}</td>
 							<td><span class="label label-{{$label}}">{{$formattedexpiry_date}}</span></td>
-							<td>{{$apotek->bentuk_sediaan}}</td>
-							<td>{{$apotek->supplier}}</td>
+							<td>{{$apotek->MasterObat->bentuk_sediaan}}</td>
+							<td>{{$apotek->GudangObat->supplier}}</td>
 							<td style="text-align: center;">
-								<span class="label bg-teal">Rp. {{$apotek->harga_satuan}}</span></h3>
+								<span class="label bg-teal">Rp. {{$apotek->GudangObat->harga_satuan}}</span></h3>
 							</td>
 							<td style="text-align: center;"><span class="badge badge-secondary">
-									{{$apotek->jumlah}}</span> </td>
+									{{$apotek->jumlah_apotek}}</span> </td>
 							<td>
-								@if ($apotek->instock == 1)
+								@if ($apotek->active == 1)
 								<span class="label label-success">Yes</span>
 								@else
 								<span class="label label-danger">No</span>
@@ -80,18 +80,14 @@
 							</td>
 							<td>
 
-								<a href="/apotek/{{$apotek->id}}/edit" class="btn btn-default btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									Edit
-								</a>
 
 								<form action="{{ route('apotek.destroy', $apotek->id) }}" class="delete" method="POST">
-									@method('DELETE')
+									@method('delete')
 									@csrf
-									<button class="btn btn-default btn-xs "><i class="fa fa-trash-o" aria-hidden="true"></i>
+									<button class="btn btn-default btn-xs btn-block "><i class="fa fa-trash-o" aria-hidden="true"></i>
 										Delete
 									</button>
 								</form>
-
 							</td>
 						</tr>
 						@endforeach

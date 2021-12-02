@@ -15,12 +15,12 @@ $tanggal_input = date("d-m-Y", strtotime($pelayanan->created_at));
 	<div class="col-sm-3">
 		<div class="box box-danger">
 			<div class="box-header with-border">
-				<h3 class="box-title">General</h3>
+				<h3 class="box-title">Detail</h3>
 			</div>
 			<div class="box-body">
 				<dl class="dl-vertical">
 					<dt>Nama pasien:</dt>
-					<dd>{{$pelayanan->nama_pasien}}</dd>
+					<dd>{{$pelayanan->DataPasien->nama_pasien}}</dd>
 					<dt>Keterangan:</dt>
 					<dd>{{$pelayanan->keterangan}}</dd>
 					<dt>Di input pada:</dt>

@@ -15,11 +15,12 @@ class CreatePelayananDetailTable extends Migration
     {
         Schema::create('pelayanan_detail', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('id_obat');
+            $table->integer('id_apotek');
+            $table->integer('id_pelayanan');
+            $table->string('qty');
+            $table->string('harga_jual');
             $table->timestamps();
-            $table->string('id_obat');
-            $table->string('jumlah');
-            $table->string('harga');
-            $table->string('id_pelayanan');
         });
     }
 

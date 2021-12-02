@@ -3,7 +3,6 @@
 @section('title', 'Obat baru gudang obat')
 
 @section('content_header')
-<h1>Obat baru</h1>
 @stop
 
 @section('content')
@@ -28,9 +27,7 @@
             <div class="form-group">
               {{Form::label('nama_obat', 'Cari obat')}}
               <select id="search_masterobat" style="width: 100%" placeholder="cari obat.."></select>
-
               {{ Form::hidden('id_obat', '', ['class' => 'form-control', 'id' => 'id_obat' , 'placeholder' => 'id_obat', 'readonly' => 'true']) }}
-
             </div>
           </div>
 
@@ -84,14 +81,14 @@
           <div class="col-sm-6">
             <div class="form-group">
               {{Form::label('supplier', 'supplier')}}
-              {{Form::select('supplier', $supplier->pluck('nama_supplier', 'nama_supplier'), null, ['id' => 'select2', 'class' => 'form-control select2s', 'placeholder' => '-- Pilih nama supplier --'])}}
+              {{ Form::text('supplier', '', ['class' => 'form-control', 'placeholder' => 'Supplier']) }}
             </div>
           </div>
 
 
           <div class="col-sm-3">
             {{Form::label('harga_satuan', 'Harga satuan obat')}}
-            {{Form::number('harga_satuan', '', [ 'class' => 'form-control', 'placeholder' => 'Harga satuan'])}}
+            {{Form::number('harga_satuan', '', [ 'class' => 'form-control', 'placeholder' => 'Harga satuan', 'readonly' => 'true'])}}
 
           </div>
           <div class="col-sm-3">
@@ -135,7 +132,7 @@
     });
 
     $("#search_masterobat").select2({
-      multiple: true,
+      multiple: false,
       placeholder: "Cari data..",
       minimumInputLength: 1,
       language: {
@@ -185,16 +182,20 @@
     }
 
     function formatRepoSelection(obat) {
+      if (!obat.id) {
+        return obat.text;
+      }
       let results = $(
         '<span>' + obat.nama_obat + '</span>' + ' ' + '<span>' + obat.dosis + ' ' + obat.bentuk_sediaan + '</span>'
       );
       return results;
     };
     $('#search_masterobat').on("select2:select", function(e) {
-      $("#id_obat").val(e.params.data.id_obat)
+      $("#id_obat").val(e.params.data.id)
       $("#nama_obat").val(e.params.data.nama_obat)
       $("#dosis").val(e.params.data.dosis)
       $("#bentuk_sediaan").val(e.params.data.bentuk_sediaan)
+      $("#harga_satuan").val(e.params.data.harga_satuan)
       $('#search_masterobat').val('2');
     });
   </script>

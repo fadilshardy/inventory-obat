@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'logo' => '<b>IM Puskesmas</b>',
+    'logo' => '<b>IM Puskesmas (CKW)</b>',
 
     'logo_mini' => '<b>CKW</b>',
 
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'collapse_sidebar' => true,
+    'collapse_sidebar' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
 
     'login_url' => 'login',
 
-    'register_url' => 'register',
+    'register_url' =>  false,
 
     /*
     |--------------------------------------------------------------------------
@@ -109,65 +109,45 @@ return [
 
     'menu' => [
 
-        'DATA OBAT MANAGEMENT',
+        'MASTER DATA',
         [
-            'text' => 'Kategori obat',
+            'text' => 'Master data obat',
             'icon' => 'hashtag',
             'submenu' => [
                 [
-                    'text' => 'Tambah kategori',
+                    'text' => 'Tambah data',
                     'icon' => 'plus',
-                    'url' => '/kategoriobat/create',
-                    'active' => ['/kategoriobat/create']
+                    'url' => '/masterobat/create',
+                    'active' => ['/masterobat/create']
                 ],
                 [
-                    'text' => 'Lihat semua kategori',
+                    'text' => 'Lihat semua data',
                     'icon' => 'search',
-                    'url' => '/kategoriobat',
-                    'active' => ['/kategoriobat']
+                    'url' => '/masterobat',
+                    'active' => ['/masterobat']
                 ],
             ],
         ],
-
         [
-            'text' => 'bentuk sediaan',
-            'icon' => 'dropbox',
+            'text' => 'Data pasien',
+            'icon' => 'users',
             'submenu' => [
                 [
-                    'text' => 'tambah bentuk sediaan',
+                    'text' => 'Tambah pasien',
                     'icon' => 'plus',
-                    'url' => '/bentuksediaan/create',
-                    'active' => ['/bentuksediaan/create']
+                    'url' => '/datapasien/create',
+                    'active' => ['/datapasien/create']
                 ],
                 [
-                    'text' => 'lihat semua bentuk sediaan',
+                    'text' => 'Lihat semua pasien',
                     'icon' => 'search',
-                    'url' => '/bentuksediaan',
-                    'active' => ['/bentuksediaan']
-                ]
-            ],
-        ],
-        [
-            'text' => 'Supplier',
-            'icon' => 'truck',
-            'submenu' => [
-                [
-                    'text' => 'Tambah supplier',
-                    'icon' => 'plus',
-                    'url' => '/suppliers/create',
-                    'active' => ['/suppliers/create']
-                ],
-                [
-                    'text' => 'Lihat semua supplier',
-                    'icon' => 'search',
-                    'url' => '/suppliers',
-                    'active' => ['/suppliers']
+                    'url' => '/datapasien',
+                    'active' => ['/datapasien']
                 ]
             ],
         ],
 
-
-        'STOK OBAT MANAGEMENT',
+        'INVENTORY MANAGEMENT',
         [
             'text' => 'Gudang puskesmas',
             'icon' => 'home',
@@ -224,24 +204,7 @@ return [
                 ],
             ],
         ],
-        [
-            'text' => 'Data pasien',
-            'icon' => 'users',
-            'submenu' => [
-                [
-                    'text' => 'Tambah pasien',
-                    'icon' => 'plus',
-                    'url' => '/product-categories/create',
-                    'active' => ['/product-categories/create']
-                ],
-                [
-                    'text' => 'Lihat semua pasien',
-                    'icon' => 'search',
-                    'url' => '/product-categories',
-                    'active' => ['/product-categories']
-                ]
-            ],
-        ],
+
 
         'Reports',
         [
@@ -262,6 +225,11 @@ return [
                     'text' => 'Laporan apotek',
                     'url' => '/laporan/apotek',
                     'active' => ['/laporan/apotek']
+                ],
+                [
+                    'text' => 'Kartu stok gudang',
+                    'url' => '/kartustok',
+                    'active' => ['/kartustok']
                 ]
             ],
         ],

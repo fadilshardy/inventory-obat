@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Gudang obat')
+@section('title', 'Master data obat')
 
 @section('content_header')
-<h1>Gudang obat</h1>
+<h1>Master data obat</h1>
 @stop
 
 @section('content')
@@ -12,8 +12,9 @@
 	<div class="col-sm-12">
 		<div class="box box-danger">
 			<div class="box-header with-border">
-				<h3 class="box-title">Gudang obat</h3>
-			</div>
+				<a href="/masterobat/create">
+					<div class="btn bg-purple">Tambah</div>
+				</a> </div>
 			<div class="box-body">
 				<table class="table" id="datatable">
 					<thead>
@@ -22,6 +23,7 @@
 							<th>Nama obat</th>
 							<th>dosis</th>
 							<th>Bentuk sediaan</th>
+							<th>Harga satuan</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -33,6 +35,8 @@
 							<td><a href="/masterobat/{{$data->id}}">{{$data->nama_obat}}</a></td>
 							<td>{{$data->dosis}}</td>
 							<td>{{$data->bentuk_sediaan}}</td>
+							<td>{{$data->harga_satuan}}</td>
+
 							<td>
 								<div class="col-sm-12">
 									<div class="btn-group" role="group" aria-label="Basic example">

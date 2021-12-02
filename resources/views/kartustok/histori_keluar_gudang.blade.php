@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="box box-danger">
             <div class="box-header with-border">
-                <h3 class="box-title">Kartu stok {{$dataobat->nama_obat}} {{$dataobat->dosis}}</h3>
+                <h3 class="box-title">Kartu stok keluar {{$dataobat->nama_obat}} {{$dataobat->dosis}}</h3>
             </div>
 
 
@@ -12,7 +12,7 @@
                         <thead>
                             <tr>
                                 <th>Tanggal</th>
-                                <th>No Batch</th>
+                                <th>jumlah</th>
                                 <th>Keluar</th>
                                 <th>Keterangan</th>
                             </tr>
@@ -22,9 +22,9 @@
                             @foreach ($data as $data)
                             <tr>
                                 <td>{{date('d M Y', strtotime($data->created_at))}}</td>
-                                <td>{{$data->gudang_obat->no_batch}} </td>
-                                <td>{{$data->jumlah}}</td>
-                                <td>{{$data->gudang_obat->keterangan}} </td>
+                                <td>{{$data->GudangObat->no_batch}} </td>
+                                <td>{{$data->stok_awal}}</td>
+                                <td>{{$data->GudangObat->keterangan}} </td>
                             </tr>
                             @endforeach
 

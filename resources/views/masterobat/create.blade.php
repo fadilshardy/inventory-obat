@@ -3,7 +3,7 @@
 @section('title', 'Master data obat baru')
 
 @section('content_header')
-<h1>Obat baru</h1>
+<h1>Data obat baru</h1>
 @stop
 
 @section('content')
@@ -19,20 +19,30 @@
         {!! Form::open(['action' => 'MasterObatController@store', 'method' => 'post']) !!}
 
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-sm-6">
             <div class="form-group">
               {{Form::label('nama_obat', 'Nama obat')}}
-              {{Form::select('nama_obat', $kategoriobat->pluck('nama_kategori', 'nama_kategori'), null, ['id' => 'select2', 'class' => 'form-control select2', 'placeholder' => '-- Pilih nama obat --'])}}
+              {{ Form::text('nama_obat', '', ['class' => 'form-control', 'placeholder' => 'Nama obat']) }}
+
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              {{Form::label('bentuk_sediaan', 'bentuk sediaan')}}
+              {{ Form::text('bentuk_sediaan', '', ['class' => 'form-control', 'placeholder' => 'Bentuk sediaan obat']) }}
+
             </div>
           </div>
         </div>
 
+      
 
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              {{Form::label('bentuk_sediaan', 'bentuk sediaan')}}
-              {{Form::select('bentuk_sediaan', $bentuksediaan->pluck('bentuk_sediaan', 'bentuk_sediaan'), null, ['id' => 'select2', 'class' => 'form-control select2', 'placeholder' => '-- Pilih Bentuk sediaan --'])}}
+              {{Form::label('harga_satuan', 'Harga')}}
+              {{ Form::text('harga_satuan', '', ['class' => 'form-control', 'placeholder' => 'Harga satuan obat']) }}
+
             </div>
           </div>
           <div class="col-sm-6">

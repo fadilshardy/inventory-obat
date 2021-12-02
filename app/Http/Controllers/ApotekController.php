@@ -4,12 +4,6 @@ namespace App\Http\Controllers;
 
 use App\GudangObat;
 use App\Apotek;
-use App\HistoriGudang;
-use App\KategoriObat;
-use App\Supplier;
-use App\BentukSediaan;
-use App\LaporanStok;
-use App\MasterObat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
@@ -28,6 +22,10 @@ class ApotekController extends Controller
                 $data->active = 0;
                 $data->save();
             }
+            if ($data->jumlah_apotek == 0) {
+                $data->active = 0;
+                $data->save();
+            }
         endforeach;
     }
 
@@ -35,7 +33,7 @@ class ApotekController extends Controller
     public function index()
     {
         // Get all the stok in gudang obat
-        $apotek = Apotek::all();
+        $apotek = Apotek::orderBy('created_at', 'DESC')->get();
 
 
 
@@ -49,7 +47,11 @@ class ApotekController extends Controller
     {
         if ($request->has('q')) {
             $cari = $request->q;
-            $data = DB::table('gudang_obat')->where('instock', '!=', 0)->where('nama_obat', 'LIKE', '%' . $cari . '%')->get();
+            $data = DB::table('gudang_obat')
+                ->join('master_obat', 'gudang_obat.id_obat', '=', 'master_obat.id')
+                ->where('active', '!=', 0)
+                ->select('gudang_obat.id as id_gudang', 'gudang_obat.*', 'master_obat.*')
+                ->where('nama_obat', 'LIKE', '%' . $cari . '%')->get();
             return response()->json($data);
         }
     }
@@ -60,15 +62,10 @@ class ApotekController extends Controller
      */
     public function create()
     {
-        // $gudangobat = GudangObat::all();
-        $kategoriobat = KategoriObat::all();
-
-        $supplier = Supplier::all();
-        $bentuksediaan = BentukSediaan::all();
 
 
         // Return the create view
-        return view('apotek.create')->with('kategoriobat', $kategoriobat)->with('supplier', $supplier)->with('bentuksediaan', $bentuksediaan);
+        return view('apotek.create');
 
         // Return the create view
         // return view('apotek.create')->with('gudangobat', $gudangobat);
@@ -86,51 +83,27 @@ class ApotekController extends Controller
 
         $data->id_obat = $request->input('id_obat');
         $data->id_gudang = $request->input('id_gudang');
-        $data->nama_obat = $request->input('nama_obat');
-        $data->no_batch = $request->input('no_batch');
-        $data->keterangan = $request->input('keterangan');
-        $data->dosis = $request->input('dosis');
-        $data->bentuk_sediaan = $request->input('bentuk_sediaan');
-        $data->supplier = $request->input('supplier');
-        $data->harga_satuan = $request->input('harga_satuan');
-        $data->jumlah = $request->input('jumlah');
-        $data->expiry_date = $request->input('expiry_date');
-        $data->instock = 1;
+        $data->jumlah_apotek = $request->input('jumlah');
         $data->stok_awal = $request->input('jumlah');
         $data->active = 1;
 
-
         //validator
         $stokgudang = GudangObat::find($data->id_gudang);
-        if ($data->jumlah >  $stokgudang->jumlah) {
+
+
+        if ($data->jumlah_apotek >  $stokgudang->jumlah) {
             $messages = "Penarikan jumlah melebihi stok gudang";
             return back()->withErrors($messages);
-        } else {
-            if ($data->save()) {
-                $histori = new HistoriGudang();
-                $histori->id_gudang = $data->id_gudang;
-                $histori->id_obat = $data->id_obat;
-                $histori->jumlah = $data->jumlah;
-                $histori->harga_satuan = $data->harga_satuan;
-                $histori->save();
-            }
-            $id_histori = $histori->id;
-            $id_gudang = $data->id_gudang;
-
-            $data = HistoriGudang::where('id', '=',  $id_histori)->orderBy('id', 'ASC')->get();
-            foreach ($data as $data) :
-                $detail = GudangObat::find($id_gudang);
-                $detail->jumlah = $detail->jumlah - $data->jumlah;
-                if ($detail->jumlah == 0) {
-                    $detail->instock = 0;
-                }
-                $detail->save();
-
-            endforeach;
-
-
-            return Redirect::to('/apotek')->with('success', "Data telah tersimpan!")->with('mode', 'success');
         }
+
+        $stokgudang->jumlah = $stokgudang->jumlah - $data->jumlah_apotek;
+        if ($stokgudang->jumlah == 0) {
+            $stokgudang->active = 0;
+        }
+
+        $data->save();
+        $stokgudang->save();
+        return Redirect::to('/apotek')->with('success', "Data telah tersimpan!")->with('mode', 'success');
     }
 
     /**
@@ -139,13 +112,13 @@ class ApotekController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show($gudangobat_id)
+    public function show($id)
     {
         // get kategori obat
-        $gudangobat = GudangObat::find($gudangobat_id);
+        $data = Apotek::find($id);
 
         // return view
-        return view('gudangobat.show')->with('gudangobat', $gudangobat);
+        return view('apotek.show')->with('data', $data);
     }
 
     /**
@@ -154,18 +127,14 @@ class ApotekController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit($gudangobat)
+    public function edit($id)
     {
         // Get the obat to edit
-        $gudangobat = GudangObat::find($gudangobat);
+        $data = Apotek::find($id);
 
-        // Get kategori obat, supplier, and bentuksediaan
-        $kategoriobat = KategoriObat::all();
-        $supplier = Supplier::all();
-        $bentuksediaan = BentukSediaan::all();
 
         // Return the edit view
-        return view('gudangobat.edit')->with('gudangobat', $gudangobat)->with('kategoriobat', $kategoriobat)->with('supplier', $supplier)->with('bentuksediaan', $bentuksediaan);
+        return view('apotek.edit')->with('data', $data);
     }
 
     /**
@@ -175,43 +144,29 @@ class ApotekController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $gudangobat)
+    public function update(Request $request, $apotek)
     {
         // Get obat
-        $gudangobat = GudangObat::find($gudangobat);
+        $apotek = Apotek::find($apotek);
 
-        // Validate user input
-        $this->validate($request, [
-            'nama_obat' => 'required|min:3|max:150',
-            'no_batch' => 'required|min:3|max:150',
-            'keterangan' => 'required|min:3|max:150',
-            'dosis' => 'required|min:3|max:50',
-            'bentuk_sediaan' => 'required|min:3|max:150',
-            'supplier' => 'required|min:3|max:150',
-            'harga_satuan' => 'required|numeric',
-            'jumlah' => 'required|numeric',
-            'expiry_date' => 'required|min:3|max:150',
-            'instock' => 'required|numeric|between:0,1',
-        ]);
+        $apotek->nama_obat = $request->input('nama_obat');
+        $apotek->nama_obat = $request->input('no_batch');
 
-        $gudangobat->nama_obat = $request->input('nama_obat');
-        $gudangobat->nama_obat = $request->input('no_batch');
-
-        $gudangobat->keterangan = $request->input('keterangan');
-        $gudangobat->dosis = $request->input('dosis');
-        $gudangobat->bentuk_sediaan = $request->input('bentuk_sediaan');
-        $gudangobat->supplier = $request->input('supplier');
-        $gudangobat->harga_satuan = $request->input('harga_satuan');
-        $gudangobat->jumlah = $request->input('jumlah');
-        $gudangobat->expiry_date = $request->input('expiry_date');
-        $gudangobat->instock = $request->input('instock');
+        $apotek->keterangan = $request->input('keterangan');
+        $apotek->dosis = $request->input('dosis');
+        $apotek->bentuk_sediaan = $request->input('bentuk_sediaan');
+        $apotek->supplier = $request->input('supplier');
+        $apotek->harga_satuan = $request->input('harga_satuan');
+        $apotek->jumlah = $request->input('jumlah');
+        $apotek->expiry_date = $request->input('expiry_date');
+        $apotek->instock = $request->input('instock');
 
 
         // Save the updated product
-        $gudangobat->save();
+        $apotek->save();
 
         // Return to index view with success message
-        return redirect('/gudangobat')->with('success', 'Obat berhasil di edit!.');
+        return redirect('/apotek')->with('success', 'Obat berhasil di edit!');
     }
 
     /**
@@ -220,19 +175,9 @@ class ApotekController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GudangObat $gudangobat)
+    public function destroy($id)
     {
-        //
-    }
-
-    public function popup_media_obat($id_count = null)
-    {
-        $data = GudangObat::latest()->get();
-        return Datatables::of($data)
-            ->addIndexColumn()
-            ->make(true);
-
-
-        return view('pelayanan.view_test')->with('id_count', $id_count);
+        Apotek::destroy($id);
+        return redirect('/apotek')->with('success', 'Data berhasil dihapus!');
     }
 }

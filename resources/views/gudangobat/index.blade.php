@@ -30,17 +30,17 @@
 							<th>Supplier</th>
 							<th>Harga satuan</th>
 							<th>Jumlah</th>
-							<th>Instock</th>
+							<th>Active</th>
 							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
 
-						@foreach ($gudangobat as $apotek)
+						@foreach ($data as $data)
 						@php
-						$formattedexpiry_date = date("d-m-Y", strtotime($apotek->expiry_date));
-						$date = Carbon\Carbon::parse($apotek->expiry_date);
-						$kurang = Carbon\Carbon::parse($apotek->expiry_date)->subYear();
+						$formattedexpiry_date = date("d-m-Y", strtotime($data->expiry_date));
+						$date = Carbon\Carbon::parse($data->expiry_date);
+						$kurang = Carbon\Carbon::parse($data->expiry_date)->subMonths(6);  
 						$now = Carbon\Carbon::now();
 						@endphp
 
@@ -60,19 +60,19 @@
 						@endphp
 
 						<tr>
-							<td>{{$apotek->id}}</td>
-							<td><a href="/gudangobat/{{$apotek->id_obat}}">{{$apotek->nama_obat}} </a> {{$apotek->dosis}}</td>
-							<td>{{$apotek->no_batch}}</td>
+							<td>{{$data->id}}</td>
+							<td><a href="/gudangobat/{{$data->id}}">{{$data->MasterObat->nama_obat}} </a> {{$data->MasterObat->dosis}}</td>
+							<td>{{$data->no_batch}}</td>
 							<td><span class="label label-{{$label}}">{{$formattedexpiry_date}}</span></td>
-							<td>{{$apotek->bentuk_sediaan}}</td>
-							<td>{{$apotek->supplier}}</td>
+							<td>{{$data->MasterObat->bentuk_sediaan}}</td>
+							<td>{{$data->supplier}}</td>
 							<td style="text-align: center;">
-								<span class="label label-warning">Rp. {{$apotek->harga_satuan}}</span></h3>
+								<span class="label label-info">Rp. {{$data->MasterObat->harga_satuan}}</span></h3>
 							</td>
 							<td style="text-align: center;"><span class="badge badge-secondary">
-									{{$apotek->jumlah}}</span> </td>
+									{{$data->jumlah}}</span> </td>
 							<td>
-								@if ($apotek->instock == 1)
+								@if ($data->active == 1)
 								<span class="label label-success">Yes</span>
 								@else
 								<span class="label label-danger">No</span>
@@ -80,14 +80,11 @@
 							</td>
 							<td>
 
-								<a href="/apotek/{{$apotek->id}}/edit" class="btn btn-default btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									Edit
-								</a>
 
-								<form action="{{ route('apotek.destroy', $apotek->id) }}" class="delete" method="POST">
+								<form action="{{ route('gudangobat.destroy', $data->id) }}" class="delete" method="POST">
 									@method('DELETE')
 									@csrf
-									<button class="btn btn-default btn-xs "><i class="fa fa-trash-o" aria-hidden="true"></i>
+									<button class="btn btn-default btn-xs  btn-block "><i class="fa fa-trash-o" aria-hidden="true"></i>
 										Delete
 									</button>
 								</form>

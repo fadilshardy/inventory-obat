@@ -17,9 +17,8 @@ class CreateMasterObatTable extends Migration
             $table->bigIncrements('id');
             $table->string('nama_obat');
             $table->string('bentuk_sediaan');
-            $table->integer('jumlah');
-
-            $table->timestamps();
+            $table->string('dosis');
+            $table->integer('harga_satuan');
         });
     }
 

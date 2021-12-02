@@ -15,16 +15,10 @@ class CreateApotekTable extends Migration
     {
         Schema::create('apotek', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('no_batch');
-            $table->string('keterangan');
-            $table->string('dosis');
-            $table->string('expiry_date');
-            $table->string('kategori_obat');
-            $table->string('bentuk_sediaan');
-            $table->string('supplier');
-            $table->integer('harga_satuan');
-            $table->integer('jumlah');
-            $table->boolean('instock');
+            $table->integer('id_gudang');
+            $table->integer('id_obat');
+            $table->integer('jumlah_apotek');
+            $table->integer('stok_awal');
             $table->boolean('active');
             $table->timestamps();
         });

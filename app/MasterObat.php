@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class MasterObat extends Model
 {
     protected $table = 'master_obat';
-    public $timestamps = true;
+    public $timestamps = false;
 
-    public function kategoriobat()
+
+    public function GudangObat()
     {
-        return $this->belongsTo('App\KategoriObat');
+      return $this->hasMany('App\GudangObat', 'id', 'id_obat');
     }
-
-    public function bentuksediaan()
+  
+    public function Apotek()
     {
-        return $this->hasMany('App\BentukSediaan');
+        return $this->hasMany('App\Apotek');
     }
 }

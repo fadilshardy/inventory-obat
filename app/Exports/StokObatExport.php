@@ -19,14 +19,11 @@ class StokObatExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
             ->orderBy('nama_obat', 'asc')
             ->get([
                 'nama_obat',
-                'dosis',
-                'bentuk_sediaan',
+                'harga_satuan',
                 'stok_gudang',
-                'stok_apotek',
-                'stok_masuk_gudang',
-                'stok_masuk_apotek',
-                'stok_keluar_gudang',
-                'stok_keluar_apotek'
+                'stok_loker',
+                'jumlah',
+                'harga'
             ]);
     }
 
@@ -34,15 +31,11 @@ class StokObatExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
     {
         return [
             'Nama Obat',
-            'Dosis',
-            'Sediaan',
-            'Stok Gudang',
-            'Stok Apotek',
-            'Stok masuk gudang',
-            'Stok masuk apotek',
-            'Stok keluar gudang',
-            'Stok keluar apotek',
-
+            'Harga satuan',
+            'stok gudang',
+            'stok loker',
+            'jumlah',
+            'harga',
         ];
     }
     public function registerEvents(): array

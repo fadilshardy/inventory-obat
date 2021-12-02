@@ -1,9 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Obat baru')
+@section('title', 'Pelayanan baru')
 
 @section('content_header')
-<h1>Obat baru</h1>
 @stop
 
 @section('content')
@@ -111,13 +110,13 @@ if (isset($data)) {
                       <a href="javascript:void(0);" class="add_button btn btn-primary" title="Tambah Baris"><i class="fa fa-plus-square" aria-hidden="true"></i>
                       </a>
                     <?php
-                  } else {
-                    ?>
+                    } else {
+                      ?>
                       <a href="javascript:void(0);" class="remove_button btn btn-danger" title="Hapus Baris"><i class="fa fa-trash" aria-hidden="true"></i>
                       </a>
                     <?php
-                  }
-                  ?>
+                    }
+                    ?>
                   </div>
                 </div>
                 <?php
@@ -150,8 +149,8 @@ if (isset($data)) {
                 </div>
               </div>
             <?php
-          }
-          ?>
+            }
+            ?>
 
           </div>
         </div>
@@ -184,7 +183,7 @@ if (isset($data)) {
           var wrapper = $('.field_wrapper');
           var x = <?= $detail_count + 1; ?>;
           $(".search_obat_" + x).select2({
-            multiple: true,
+            multiple: false,
             placeholder: "Cari obat..",
             minimumInputLength: 1,
             language: {
@@ -228,7 +227,7 @@ if (isset($data)) {
             var markup =
               '<div class="clearfix">' +
               '<div>' + obat.nama_obat + ' (' + obat.dosis + ')' + '</div>' +
-              '<div class="col-sm-4">' + 'stock: ' + obat.jumlah + '</div > ' +
+              '<div class="col-sm-4">' + 'stock: ' + obat.jumlah_apotek + '</div > ' +
               '<div class="col-sm-4">' + obat.bentuk_sediaan + ' </div>' +
               '<div class="col-sm-4">' + obat.expiry_date;
 
@@ -237,6 +236,9 @@ if (isset($data)) {
           }
 
           function formatRepoSelection(obat) {
+            if (!obat.id) {
+              return obat.text;
+            }
             let results = $(
               '<span>' + obat.nama_obat + '</span>' + ' ' + '<span>' + obat.dosis + ' ' + obat.bentuk_sediaan + '</span>'
             );
@@ -244,7 +246,7 @@ if (isset($data)) {
           };
 
           $('.search_obat_1').on("select2:select", function(e) {
-            $("#id_apotek_1").val(e.params.data.id)
+            $("#id_apotek_1").val(e.params.data.id_apotek)
             $("#id_obat_1").val(e.params.data.id_obat)
             $("#nama_obat_1").val(e.params.data.nama_obat)
             $("#harga_1").val(e.params.data.harga_satuan)
@@ -263,14 +265,12 @@ if (isset($data)) {
               x +
               '" style="width: 100%" placeholder="cari obat.."></select></div><div class="col-sm-3"><input type="text" name="harga[]" id="harga_' +
               x +
-              '" class="form-control" placeholder="' +
-              x +
-              '" required></div><div class="col-sm-2"><div class="input-group"><input type="text" name="qty[]" id="qty_' +
+              '" class="form-control" placeholder="harga" required></div><div class="col-sm-2"><div class="input-group"><input type="text" name="qty[]" id="qty_' +
               x +
               '" class="form-control" placeholder="Qty" required></div></div><div class="col-sm-2"><a href="javascript:void(0);" class="remove_button btn bg-red btn-flat" title="Hapus Baris"><i class="fa fa-trash" aria-hidden="true"></i> </a></div><br/></div>'
             );
             $(".search_obat_" + x).select2({
-              multiple: true,
+              multiple: false,
               placeholder: "Cari obat..",
               minimumInputLength: 1,
               language: {
@@ -314,7 +314,7 @@ if (isset($data)) {
               var markup =
                 '<div class="clearfix">' +
                 '<h4 class = "">' + obat.nama_obat + ' (' + obat.dosis + ')' + '</h4>' +
-                '<div class="col-sm-4">' + 'stock: ' + obat.jumlah + '</div > ' +
+                '<div class="col-sm-4">' + 'stock: ' + obat.jumlah_apotek + '</div > ' +
                 '<div class="col-sm-4">' + obat.bentuk_sediaan + ' </div>' +
                 '<div class="col-sm-4">' + obat.expiry_date;
 
@@ -323,6 +323,9 @@ if (isset($data)) {
             }
 
             function formatRepoSelection(obat) {
+              if (!obat.id) {
+                return obat.text;
+              }
               let results = $(
                 '<span>' + obat.nama_obat + '</span>' + ' ' + '<span>' + obat.dosis + ' ' + obat.bentuk_sediaan + '</span>'
               );
@@ -330,11 +333,10 @@ if (isset($data)) {
             };
 
             $('.search_obat_' + x).on("select2:select", function(e) {
-              $("#id_apotek_" + x).val(e.params.data.id)
+              $("#id_apotek_" + x).val(e.params.data.id_apotek)
               $("#id_obat_" + x).val(e.params.data.id_obat)
               $("#nama_obat_" + x).val(e.params.data.nama_obat)
               $("#harga_" + x).val(e.params.data.harga_satuan)
-              $(".search_obat_" + x).val('1');
             });
           });
           $(wrapper).on('click', '.remove_button', function(e) {
@@ -359,7 +361,7 @@ if (isset($data)) {
 
       <script>
         $("#search_pasien").select2({
-          multiple: true,
+          multiple: false,
           placeholder: "Cari pasien..",
           minimumInputLength: 1,
           language: {
@@ -408,6 +410,9 @@ if (isset($data)) {
         }
 
         function formatRepoSelection(pasien) {
+          if (!pasien.id) {
+            return pasien.text;
+          }
           let results = $(
             '<span>' + pasien.nama_pasien + '</span>'
           );

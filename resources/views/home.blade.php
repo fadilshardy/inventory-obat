@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-xs-6">
@@ -43,7 +44,7 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3>44</h3>
+                <h3>{{$jumlah['jumlah_pasien']}}</h3>
 
                 <p>Data pasien</p>
             </div>
@@ -113,19 +114,18 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-12" id="peringatan">
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h4><i class="icon fa fa-ban"></i>Awas!</h4>
-
-            Ada {{$notification['jumlah_expiry']}} obat yang sudah melewati masa kadaluarsa dan {{$notification['jumlah_nostok']}} obat tidak memiliki stok, <a href="/gudangobat">klik disini</a> untuk informasi lebih lanjut.
+{{$notification['safety_stock']}} obat dibawah stok pengaman (safety stock), <a href="/gudangobat">klik disini</a> untuk informasi lebih lanjut.
         </div>
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-12" id="pemberitahuan">
         <div class="alert alert-warning alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h4><i class="icon fa fa-warning"></i> Pemberitahuan</h4>
-            {{$notification['jumlah_almost_nostok']}} obat memiliki stok kurang dari 10, <a href="/gudangobat">klik disini</a> untuk informasi lebih lanjut.
+            {{$notification['reorder_point']}} obat harus segera di pesan kembali, <a href="/laporan/stokobat">klik disini</a> untuk informasi lebih lanjut.
         </div>
     </div>
 </div>
@@ -150,7 +150,6 @@
                                 <th>#</th>
                                 <th>Nama pasien</th>
                                 <th>Tanggal</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -162,11 +161,9 @@
                             @endphp
                             <tr>
                                 <td>{{$i}}</td>
-                                <td><a href="/pelayanan/{{$pelayanan->id}}">{{$pelayanan->nama_pasien}}</a></td>
+                                <td><a href="/pelayanan/{{$pelayanan->id}}">{{$pelayanan->DataPasien->nama_pasien}}</a></td>
                                 <td>{{ $formatted_tanggal}}</td>
-                                <td>
-                                    <a href="/pelayanan/{{$pelayanan->id}}/" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i>
-                                </td>
+
                             </tr>
                             @endforeach
 
@@ -214,12 +211,12 @@
                             @endphp
                             <tr>
                                 <td>{{$i}}</td>
-                                <td>{{$gudangobat->nama_obat}} {{$gudangobat->dosis}}</td>
+                                <td><a href="/gudangobat/{{$gudangobat->id}}/">{{$gudangobat->MasterObat->nama_obat}} </a> {{$gudangobat->MasterObat->dosis}}</td>
                                 <td>{{$gudangobat->stok_awal}}</td>
                                 <td>{{ $formatted_tanggal }}</td>
 
                                 <td>
-                                    <a href="/pelayanan/{{$pelayanan->id}}/" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i>
+                                    <a href="/pelayanan/{{$gudangobat->id}}/" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i>
                                 </td>
                             </tr>
                             @endforeach
@@ -236,4 +233,31 @@
         </div>
     </div>
 </div>
+
+<script>
+        var SafetyStock = <?php echo $notification['safety_stock'] ?>;
+
+    var reorderPoint = <?php echo $notification['reorder_point'] ?>;
+
+    function ShowROP(reorderPoint) {
+  if (reorderPoint > 0) {
+    document.getElementById("pemberitahuan").style.display = "block";
+  } else {
+    document.getElementById("pemberitahuan").style.display = "none";
+  }
+};
+
+function ShowSS(SafetyStock) {
+  if (SafetyStock > 0) {
+    document.getElementById("peringatan").style.display = "block";
+  } else {
+    document.getElementById("peringatan").style.display = "none";
+  }
+};
+
+ShowROP(reorderPoint);
+ShowSS(SafetyStock);
+console.log(SafetyStock);
+
+  </script>
 @stop

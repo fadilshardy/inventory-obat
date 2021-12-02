@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use DataTables;
 use App\Pelayanan;
 use App\GudangObat;
+use App\DataPasien;
 use App\Apotek;
 use App\PelayananDetail;
 use Carbon\Carbon;
+use App\LaporanStok;
 
 class HomeController extends Controller
 {
@@ -31,7 +33,7 @@ class HomeController extends Controller
         $jumlah = [
             'jumlah_gudang' => GudangObat::all()->count(),
             'jumlah_apotek' => Apotek::all()->count(),
-            // 'jumlah_pasien' => Pelayanan::all()->count(),
+            'jumlah_pasien' => DataPasien::all()->count(),
             'jumlah_pelayanan' => Pelayanan::all()->count()
         ];
 
@@ -43,11 +45,9 @@ class HomeController extends Controller
         ];
 
         $notification = [
-            'jumlah_expiry' => GudangObat::Where('active', '=', 0)->count(),
-            'jumlah_nostok' => gudangObat::Where('instock', '=', 0)->count(),
-            'jumlah_almost_nostok' => GudangObat::Where('jumlah', '>', 0)
-                ->where('jumlah', '<', 10)
-                ->count()
+            'safety_stock' => LaporanStok::Where('status', '=', 'warning')->count(),
+            'reorder_point' => LaporanStok::where('status', '=', 'restock')->count()
+           
 
         ];
 

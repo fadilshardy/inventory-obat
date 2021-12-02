@@ -45,7 +45,6 @@ class DataPasienController extends Controller
         $data = new DataPasien;
 
         $data->nama_pasien = $request->input('nama_pasien');
-        $data->nik = $request->input('nik');
         $data->gender = $request->input('gender');
         $data->tanggal_lahir = date("d-m-Y", strtotime($request->input('tanggal_lahir')));
         $data->alamat = $request->input('alamat');

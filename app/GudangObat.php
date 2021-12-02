@@ -6,21 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class GudangObat extends Model
 {
-    protected $table = 'gudang_obat';
-    public $timestamps = true;
+  protected $table = 'gudang_obat';
+  public $timestamps = true;
 
-    public function kategoriobat()
-		{
-			return $this->belongsTo('App\KategoriObat');
-		}
 
-    public function supplier()
-    {
-      return $this->hasMany('App\Supplier');
-    }
+  public function MasterObat()
+  {
+    return $this->belongsTo('App\MasterObat', 'id_obat');
+  }
 
-    public function bentuksediaan()
-    {
-      return $this->hasMany('App\BentukSediaan');
-    }
+ 
+ 
 }

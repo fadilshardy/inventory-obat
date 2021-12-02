@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHistoriGudangTable extends Migration
+class CreateGudangObatTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,16 @@ class CreateHistoriGudangTable extends Migration
      */
     public function up()
     {
-        Schema::create('histori_gudang', function (Blueprint $table) {
+        Schema::create('gudang_obat', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('id_obat');
+            $table->integer('id_obat');
             $table->string('no_batch');
-            $table->string('keterangan');
-            $table->string('dosis');
+            $table->string('keterangan')->nullable();
             $table->string('expiry_date');
-            $table->string('kategori_obat');
-            $table->string('bentuk_sediaan');
             $table->string('supplier');
-            $table->integer('harga_satuan');
             $table->integer('jumlah');
-            $table->boolean('instock');
+            $table->integer('stok_awal');
+            $table->boolean('active');
             $table->timestamps();
         });
     }
@@ -37,6 +34,6 @@ class CreateHistoriGudangTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('histori_gudang');
+        Schema::dropIfExists('gudang_obat');
     }
 }

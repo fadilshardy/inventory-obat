@@ -16,12 +16,10 @@ class CreateDataPasienTable extends Migration
         Schema::create('data_pasien', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nama_pasien');
-            $table->bigInteger('NIK');
             $table->string('gender');
             $table->string('tanggal_lahir');
             $table->string('alamat');
             $table->bigInteger('no_telp');
-            $table->timestamps();
         });
     }
 
